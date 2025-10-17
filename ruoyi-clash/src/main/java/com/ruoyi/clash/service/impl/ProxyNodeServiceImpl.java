@@ -3,6 +3,7 @@ package com.ruoyi.clash.service.impl;
 import com.ruoyi.clash.domain.node.ProxyNode;
 import com.ruoyi.clash.mapper.ProxyNodeMapper;
 import com.ruoyi.clash.service.IProxyNodeService;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,12 @@ public class ProxyNodeServiceImpl implements IProxyNodeService {
     @Override
     public List<ProxyNode> exactQuery(ProxyNode proxyNode) {
         return proxyNodeMapper.exactQuery(proxyNode);
+    }
+
+    @Override
+    public List<ProxyNode> getAllActiveNode() {
+        ProxyNode templateNode = new ProxyNode();
+        templateNode.setStatus(Constants.Status.ENABLED);
+        return proxyNodeMapper.exactQuery(templateNode);
     }
 }

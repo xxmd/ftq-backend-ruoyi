@@ -96,8 +96,6 @@
         <if test="status != null and status != ''">
             AND pn.status = #{status}
         </if>
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
         order by pn.create_time
     </select>
 

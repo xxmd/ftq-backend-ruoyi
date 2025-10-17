@@ -1,10 +1,11 @@
 package com.ruoyi.clash.enums;
 
-public enum CipherType implements ReadAbleEnum<String> {
-    AES_256_GCM("aes-256-gcm");
+public enum ClashLogLevel implements ReadAbleEnum<String> {
+    INFO("info"), DEBUG("debug");
+
     private String value;
 
-    CipherType(String value) {
+    ClashLogLevel(String value) {
         this.value = value;
     }
 

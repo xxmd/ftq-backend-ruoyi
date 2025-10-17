@@ -17,4 +17,6 @@ public interface IProxyNodeService {
     boolean checkNodeNameUnique(ProxyNode proxyNode);
 
     List<ProxyNode> exactQuery(ProxyNode proxyNode);
+
+    List<ProxyNode> getAllActiveNode();
 }
