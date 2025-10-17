@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.clash.mapper.ProxyGroupMapper">
+
+    <resultMap type="ProxyGroup" id="ItemResultMap">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="url" column="url"/>
+        <result property="intervalSeconds" column="interval_seconds"/>
+
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap type="ProxyGroup" id="ItemDetailResultMap">
+        <id property="id" column="group_id"/>
+        <result property="name" column="group_name"/>
+        <result property="type" column="group_type"/>
+        <result property="url" column="group_url"/>
+        <result property="intervalSeconds" column="group_interval_seconds"/>
+
+        <result property="status" column="group_status"/>
+        <result property="delFlag" column="group_del_flag"/>
+        <result property="remark" column="group_remark"/>
+        <result property="createBy" column="group_create_by"/>
+        <result property="createTime" column="group_create_time"/>
+        <result property="updateBy" column="group_update_by"/>
+        <result property="updateTime" column="group_update_time"/>
+
+        <collection  property="proxies"    javaType="java.util.List"  resultMap="ProxyNodeResult" />
+    </resultMap>
+
+    <resultMap id="ProxyNodeResult" type="ProxyNode">
+        <id property="id" column="node_id"/>
+        <result property="name" column="node_name"/>
+        <result property="type" column="node_type"/>
+        <result property="server" column="node_server"/>
+        <result property="port" column="node_port"/>
+        <result property="tls" column="node_tls"/>
+        <result property="password" column="node_password"/>
+        <result property="sni" column="node_sni"/>
+        <result property="skipCertVerify" column="node_skip_cert_verify"/>
+        <result property="udp" column="node_udp"/>
+        <result property="cipher" column="node_cipher"/>
+        <result property="status" column="node_status"/>
+        <result property="delFlag" column="node_del_flag"/>
+        <result property="createBy" column="node_create_by"/>
+        <result property="createTime" column="node_create_time"/>
+        <result property="updateBy" column="node_update_by"/>
+        <result property="updateTime" column="node_update_time"/>
+        <result property="remark" column="node_remark"/>
+    </resultMap>
+
+    <sql id="selectItemVo">
+        select item.id, item.name, item.type, item.url, item.interval_seconds,
+        item.status, item.del_flag, item.remark, item.create_by, item.create_time
+        from proxy_group item
+    </sql>
+
+    <sql id="selectItemDetailVo">
+        select item.id as group_id, item.name as group_name, item.type as group_type, item.url as group_url, item.interval_seconds as group_interval_seconds,
+        item.status as group_status, item.del_flag as group_del_flag, item.remark as group_remark,
+        item.create_by as group_create_by, item.create_time as group_create_time, item.update_by as group_update_by, item.update_time as group_update_time,
+        pn.id as node_id, pn.name as node_name, pn.type as node_type, pn.server as node_server, pn.port as node_port,
+        pn.tls as node_tls, pn.password as node_password, pn.sni as node_sni, pn.skip_cert_verify as node_skip_cert_verify, pn.udp as node_udp, pn.cipher as node_cipher,
+        pn.create_by as node_create_by, pn.create_time as node_create_time, pn.update_by as node_update_by, pn.update_time as node_update_time, pn.remark as node_remark
+        from proxy_group item
+        left join proxy_group_node pgn on pgn.group_id = item.id
+        left join proxy_node pn on pn.id = pgn.node_id and pn.del_flag = '0'
+    </sql>
+
+    <select id="fuzzyQuery" parameterType="ProxyGroup" resultMap="ItemResultMap">
+        <include refid="selectItemVo"/>
+        where item.del_flag = '0'
+        <if test="id != null and id != 0">
+            AND item.id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND item.name like concat('%', #{name}, '%')
+        </if>
+        <if test="type != null">
+            AND item.type = #{type}
+        </if>
+        <if test="status != null and status != ''">
+            AND item.status = #{status}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(item.create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(item.create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+        </if>
+        order by item.create_time desc
+    </select>
+
+    <select id="exactQuery" parameterType="ProxyGroup" resultMap="ItemDetailResultMap">
+        <include refid="selectItemDetailVo"/>
+        where item.del_flag = '0'
+        <if test="id != null and id != 0">
+            AND item.id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND item.name = #{name}
+        </if>
+        <if test="type != null">
+            AND item.type = #{type}
+        </if>
+        <if test="url != null and url != ''">
+            AND item.url = #{url}
+        </if>
+        <if test="intervalSeconds != null">
+            AND item.interval_seconds = #{intervalSeconds}
+        </if>
+        <if test="status != null and status != ''">
+            AND item.status = #{status}
+        </if>
+        order by item.create_time
+    </select>
+
+    <insert id="insert" parameterType="ProxyGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into proxy_group(
+        <if test="id != null and id != 0">id,</if>
+        <if test="name != null and name != ''">name,</if>
+        <if test="type != null">type,</if>
+        <if test="url != null and url != ''">url,</if>
+        <if test="intervalSeconds != null">interval_seconds,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time
+        )values(
+        <if test="id != null and id != 0">#{id},</if>
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="type != null">#{type},</if>
+        <if test="url != null and url != ''">#{url},</if>
+        <if test="intervalSeconds != null">#{intervalSeconds},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="update" parameterType="ProxyGroup">
+        update proxy_group
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="intervalSeconds != null">interval_seconds = #{intervalSeconds},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        update proxy_group set del_flag = '2' where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.clash.mapper.ProxyNodeMapper">
+
+    <resultMap type="ProxyNode" id="ProxyNodeResult">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="server" column="server"/>
+        <result property="port" column="port"/>
+        <result property="tls" column="tls"/>
+        <result property="password" column="password"/>
+        <result property="sni" column="sni"/>
+        <result property="skipCertVerify" column="skip_cert_verify"/>
+        <result property="udp" column="udp"/>
+        <result property="cipher" column="cipher"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectNodeVo">
+        select pn.id, pn.name, pn.type, pn.server, pn.port, pn.tls, pn.password, pn.sni, pn.skip_cert_verify, pn.udp, pn.cipher,
+        pn.status, pn.del_flag, pn.remark, pn.create_by, pn.create_time
+        from proxy_node pn
+    </sql>
+
+    <select id="selectNodeList" parameterType="ProxyNode" resultMap="ProxyNodeResult">
+        <include refid="selectNodeVo"/>
+        where pn.del_flag = '0'
+        <if test="id != null and id != 0">
+            AND pn.id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND pn.name like concat('%', #{name}, '%')
+        </if>
+        <if test="type != null">
+            AND pn.type = #{type}
+        </if>
+        <if test="status != null and status != ''">
+            AND pn.status = #{status}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(pn.create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(pn.create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by pn.create_time desc
+    </select>
+
+    <select id="exactQuery" parameterType="ProxyNode" resultMap="ProxyNodeResult">
+        <include refid="selectNodeVo"/>
+        where pn.del_flag = '0'
+        <if test="id != null and id != 0">
+            AND pn.id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND pn.name = #{name}
+        </if>
+        <if test="type != null">
+            AND pn.type = #{type}
+        </if>
+        <if test="server != null and server != ''">
+            AND pn.server = #{server}
+        </if>
+        <if test="port != null">
+            AND pn.port = #{port}
+        </if>
+        <if test="tls != null">
+            AND pn.tls = #{tls}
+        </if>
+        <if test="cipher != null">
+            AND pn.cipher = #{cipher}
+        </if>
+        <if test="password != null and password != ''">
+            AND pn.password = #{password}
+        </if>
+        <if test="udp != null">
+            AND pn.udp = #{udp}
+        </if>
+        <if test="sni != null and sni != ''">
+            AND pn.sni = #{sni}
+        </if>
+        <if test="skipCertVerify != null">
+            AND pn.skip_cert_verify = #{skipCertVerify}
+        </if>
+        <if test="status != null and status != ''">
+            AND pn.status = #{status}
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by pn.create_time
+    </select>
+
+    <select id="checkNodeNameUnique" parameterType="String" resultMap="ProxyNodeResult">
+        <include refid="selectNodeVo"/>
+        where pn.name=#{name} and pn.del_flag = '0' limit 1
+    </select>
+
+    <select id="queryNode" parameterType="String" resultMap="ProxyNodeResult">
+        <include refid="selectNodeVo"/>
+        where pn.del_flag = '0'
+        <if test="id != null and id != 0">
+            AND pn.id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND pn.name = #{name}
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by pn.create_time
+    </select>
+
+<!--    <select id="checkRoleKeyUnique" parameterType="String" resultMap="SysRoleResult">-->
+<!--        <include refid="selectRoleVo"/>-->
+<!--        where r.role_key=#{roleKey} and r.del_flag = '0' limit 1-->
+<!--    </select>-->
+
+    <insert id="insertNode" parameterType="ProxyNode" useGeneratedKeys="true" keyProperty="id">
+        insert into proxy_node(
+        <if test="id != null and id != 0">id,</if>
+        <if test="name != null and name != ''">name,</if>
+        <if test="type != null">type,</if>
+        <if test="server != null and server != ''">server,</if>
+        <if test="port != null and port != ''">port,</if>
+        <if test="tls != null and tls != ''">tls,</if>
+        <if test="password != null and password != ''">password,</if>
+        <if test="sni != null">sni,</if>
+        <if test="skipCertVerify != null">skip_cert_verify,</if>
+        <if test="udp != null">udp,</if>
+        <if test="cipher != null">cipher,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time
+        )values(
+        <if test="id != null and id != 0">#{id},</if>
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="type != null">#{type},</if>
+        <if test="server != null and server != ''">#{server},</if>
+        <if test="port != null and port != ''">#{port},</if>
+        <if test="tls != null and tls != ''">#{tls},</if>
+        <if test="password != null and password != ''">#{password},</if>
+        <if test="sni != null">#{sni},</if>
+        <if test="skipCertVerify != null">#{skipCertVerify},</if>
+        <if test="udp != null">#{udp},</if>
+        <if test="cipher != null">#{cipher},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateNode" parameterType="ProxyNode">
+        update proxy_node
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="server != null and server != ''">server = #{server},</if>
+            <if test="port != null and port != ''">port = #{port},</if>
+            <if test="tls != null and tls != ''">tls = #{tls},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="sni != null and sni != ''">sni = #{sni},</if>
+            <if test="skipCertVerify != null">skip_cert_verify = #{skipCertVerify},</if>
+            <if test="udp != null">udp = #{udp},</if>
+            <if test="cipher != null">cipher = #{cipher},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+<!--    <delete id="deleteRoleById" parameterType="Long">-->
+<!--        update sys_role set del_flag = '2' where role_id = #{roleId}-->
+<!--    </delete>-->
+
+    <delete id="deleteNodeByIds" parameterType="Long">
+        update proxy_node set del_flag = '2' where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
