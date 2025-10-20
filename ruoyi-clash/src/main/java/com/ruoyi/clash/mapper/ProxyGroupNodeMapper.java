@@ -1,6 +1,6 @@
 package com.ruoyi.clash.mapper;
 
-import com.ruoyi.clash.domain.node.ProxyGroupNode;
+import com.ruoyi.clash.domain.ProxyGroupNode;
 
 import java.util.List;
 

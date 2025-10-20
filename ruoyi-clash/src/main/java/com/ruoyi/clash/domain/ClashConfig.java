@@ -1,13 +1,12 @@
 package com.ruoyi.clash.domain;
 
-import com.ruoyi.clash.domain.node.ProxyGroup;
-import com.ruoyi.clash.domain.node.ProxyNode;
-import com.ruoyi.clash.domain.node.ProxyRule;
+import com.ruoyi.clash.domain.base.ClashEntity;
 import com.ruoyi.clash.enums.ClashLogLevel;
 import com.ruoyi.clash.enums.ClashMode;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ClashConfig extends ClashEntity {
@@ -20,6 +19,11 @@ public class ClashConfig extends ClashEntity {
     private List<ProxyNode> proxies;
     private List<ProxyGroup> proxyGroups;
     private List<ProxyRule> rules;
+
+    @Override
+    public Map<String, Object> toYamlMap(Object parent) {
+        return (Map<String, Object>) super.toYamlMap(parent);
+    }
 }
 
 

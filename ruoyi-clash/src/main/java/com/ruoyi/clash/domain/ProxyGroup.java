@@ -1,12 +1,11 @@
-package com.ruoyi.clash.domain.node;
+package com.ruoyi.clash.domain;
 
-import com.ruoyi.clash.annotation.ConditionalNotBlank;
-import com.ruoyi.clash.annotation.ConditionalNotNull;
-import com.ruoyi.clash.annotation.ConditionalValid;
-import com.ruoyi.clash.annotation.YamlIgnore;
-import com.ruoyi.clash.domain.ClashEntity;
+import com.ruoyi.clash.annotation.validate.ConditionalNotBlank;
+import com.ruoyi.clash.annotation.validate.ConditionalNotNull;
+import com.ruoyi.clash.annotation.validate.ConditionalValid;
+import com.ruoyi.clash.annotation.yaml.YamlProperty;
+import com.ruoyi.clash.domain.base.ClashEntity;
 import com.ruoyi.clash.enums.ProxyGroupType;
-import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -30,9 +29,9 @@ public class ProxyGroup extends ClashEntity {
 
     // 代理分组延迟测试间隔
     @ConditionalNotNull(dependFieldName = "type", dependFieldValues = {"URL_TEST"})
+    @YamlProperty("interval")
     private Integer intervalSeconds;
 
     // 代理分组下属代理节点集合
-    @YamlIgnore
     private List<ProxyNode> proxies;
 }

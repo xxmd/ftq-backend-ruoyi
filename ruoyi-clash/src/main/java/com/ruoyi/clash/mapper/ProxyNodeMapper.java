@@ -1,7 +1,6 @@
 package com.ruoyi.clash.mapper;
 
-import com.ruoyi.clash.domain.node.ProxyNode;
-import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.clash.domain.ProxyNode;
 
 import java.util.List;
 

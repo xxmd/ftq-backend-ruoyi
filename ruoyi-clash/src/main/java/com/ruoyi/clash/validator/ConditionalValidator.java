@@ -1,8 +1,8 @@
 package com.ruoyi.clash.validator;
 
-import com.ruoyi.clash.annotation.ConditionalNotBlank;
-import com.ruoyi.clash.annotation.ConditionalNotNull;
-import com.ruoyi.clash.annotation.ConditionalValid;
+import com.ruoyi.clash.annotation.validate.ConditionalNotBlank;
+import com.ruoyi.clash.annotation.validate.ConditionalNotNull;
+import com.ruoyi.clash.annotation.validate.ConditionalValid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

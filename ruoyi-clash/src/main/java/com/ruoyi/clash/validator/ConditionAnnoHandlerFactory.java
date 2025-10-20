@@ -1,7 +1,7 @@
 package com.ruoyi.clash.validator;
 
-import com.ruoyi.clash.annotation.ConditionalNotBlank;
-import com.ruoyi.clash.annotation.ConditionalNotNull;
+import com.ruoyi.clash.annotation.validate.ConditionalNotBlank;
+import com.ruoyi.clash.annotation.validate.ConditionalNotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

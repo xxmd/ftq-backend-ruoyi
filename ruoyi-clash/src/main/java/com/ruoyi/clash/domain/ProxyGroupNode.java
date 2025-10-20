@@ -1,4 +1,4 @@
-package com.ruoyi.clash.domain.node;
+package com.ruoyi.clash.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

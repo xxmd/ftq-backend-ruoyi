@@ -1,6 +1,6 @@
 package com.ruoyi.clash.service;
 
-import com.ruoyi.clash.domain.node.ProxyRule;
+import com.ruoyi.clash.domain.ProxyRule;
 
 import java.util.List;
 

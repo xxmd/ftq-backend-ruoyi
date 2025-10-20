@@ -1,6 +1,6 @@
 package com.ruoyi.clash.service.impl;
 
-import com.ruoyi.clash.domain.node.ProxyNode;
+import com.ruoyi.clash.domain.ProxyNode;
 import com.ruoyi.clash.mapper.ProxyNodeMapper;
 import com.ruoyi.clash.service.IProxyNodeService;
 import com.ruoyi.common.constant.Constants;

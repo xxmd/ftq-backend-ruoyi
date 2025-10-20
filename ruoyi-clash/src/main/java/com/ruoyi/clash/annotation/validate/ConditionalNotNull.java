@@ -1,15 +1,14 @@
-package com.ruoyi.clash.annotation;
+package com.ruoyi.clash.annotation.validate;
 
 import javax.validation.Payload;
 import java.lang.annotation.*;
-import java.util.function.Function;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ConditionalNotBlank {
+public @interface ConditionalNotNull {
 
-    String message() default "{field}不能为空";
+    String message() default "{field}不能为null";
 
     Class<?>[] groups() default {};
 

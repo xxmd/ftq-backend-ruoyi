@@ -1,13 +1,16 @@
-package com.ruoyi.clash.domain;
+package com.ruoyi.clash.domain.base;
 
+import com.ruoyi.clash.annotation.yaml.YamlIgnore;
+import com.ruoyi.clash.annotation.yaml.YamlProperty;
 import com.ruoyi.clash.enums.ReadAbleEnum;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.utils.bean.ReflectionUtils;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,32 +32,34 @@ public class ClashEntity extends BaseEntity {
      */
     private String delFlag;
 
-    public Map<String, Object> toYamlMap() {
+    public Object toYamlMap(Object parent) {
         Field[] fields = getClass().getDeclaredFields();
         Map<String, Object> map = new LinkedHashMap<>();
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
+                YamlIgnore yamlIgnore = field.getAnnotation(YamlIgnore.class);
+                if (yamlIgnore != null) {
+                    continue;
+                }
                 Object value = field.get(this);
                 if (value == null) {
                     continue;
                 }
                 if (value instanceof ReadAbleEnum) {
                     value = ((ReadAbleEnum) value).getValue().toString();
-                } else if (value instanceof List) {
-                    Type genericType = field.getGenericType();
-                    Type actualType = genericType.getActualTypeArguments()[0];
-                    if (genericType instanceof ClashEntity) {
-                        List listValue = (List) value;
-                        value = listValue.stream().map(it -> {
-                            ClashEntity childEntity = (ClashEntity) it;
-                            return childEntity.toYamlMap();
-                        }).collect(Collectors.toList());
-                    }
+                } else if (value instanceof Integer || value instanceof Boolean) {
+
+                } else if (ReflectionUtils.isListOfType(field, ClashEntity.class)) {
+                    List listValue = (List) value;
+                    value = listValue.stream().map(it -> {
+                        ClashEntity childEntity = (ClashEntity) it;
+                        return childEntity.toYamlMap(this);
+                    }).collect(Collectors.toList());
                 } else {
                     value = value.toString();
                 }
-                map.put(convertCamelName(field.getName()), value);
+                map.put(convertYamlFieldName(field), value);
             }
         } catch (IllegalAccessException e) {
             log.error(e.getMessage(), e);
@@ -62,7 +67,12 @@ public class ClashEntity extends BaseEntity {
         return map;
     }
 
-    private String convertCamelName(String name) {
+    private String convertYamlFieldName(Field field) {
+        YamlProperty yamlProperty = field.getAnnotation(YamlProperty.class);
+        if (yamlProperty != null && StringUtils.isNotEmpty(yamlProperty.value())) {
+            return yamlProperty.value();
+        }
+        String name = field.getName();
         if (name == null || name.isEmpty()) {
             return name;
         }

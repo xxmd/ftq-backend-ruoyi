@@ -1,4 +1,4 @@
-package com.ruoyi.clash.annotation;
+package com.ruoyi.clash.annotation.validate;
 
 import com.ruoyi.clash.validator.ConditionalValidator;
 

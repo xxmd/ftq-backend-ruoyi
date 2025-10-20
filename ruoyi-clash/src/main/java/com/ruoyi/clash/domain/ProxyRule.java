@@ -1,14 +1,16 @@
-package com.ruoyi.clash.domain.node;
+package com.ruoyi.clash.domain;
 
-import com.ruoyi.clash.annotation.ConditionalNotNull;
-import com.ruoyi.clash.annotation.ConditionalValid;
-import com.ruoyi.clash.annotation.YamlIgnore;
-import com.ruoyi.clash.domain.ClashEntity;
+import com.ruoyi.clash.annotation.validate.ConditionalNotNull;
+import com.ruoyi.clash.annotation.validate.ConditionalValid;
+import com.ruoyi.clash.domain.base.ClashEntity;
 import com.ruoyi.clash.enums.ProxyRulePolicy;
 import com.ruoyi.clash.enums.ProxyRuleType;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @ConditionalValid
 @Data
@@ -24,16 +26,28 @@ public class ProxyRule extends ClashEntity {
     private ProxyRulePolicy policy;
 
     // PROXY策略下对应代理节点
-    @YamlIgnore
     @ConditionalNotNull(dependFieldName = "policy", dependFieldValues = {"PROXY"})
     private ProxyNode proxyNode;
 
     // PROXY_GROUP策略下对应代理分组
-    @YamlIgnore
     @ConditionalNotNull(dependFieldName = "policy", dependFieldValues = {"PROXY_GROUP"})
     private ProxyGroup proxyGroup;
 
     // 排序字段
-    @YamlIgnore
     private int sort;
+
+    @Override
+    public Object toYamlMap(Object parent) {
+        List<String> parts = new ArrayList<>();
+        parts.add(type.getValue());
+        if (StringUtils.isNotEmpty(content)) {
+            parts.add(content);
+        }
+        if (proxyGroup == null) {
+            parts.add("DIRECT");
+        } else {
+            parts.add(proxyGroup.getName());
+        }
+        return String.join(",", parts);
+    }
 }

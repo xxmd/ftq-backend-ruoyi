@@ -1,8 +1,6 @@
 package com.ruoyi.clash.service.impl;
 
-import com.ruoyi.clash.domain.node.ProxyGroup;
-import com.ruoyi.clash.domain.node.ProxyGroupNode;
-import com.ruoyi.clash.domain.node.ProxyRule;
+import com.ruoyi.clash.domain.ProxyRule;
 import com.ruoyi.clash.enums.ProxyRulePolicy;
 import com.ruoyi.clash.mapper.ProxyRuleMapper;
 import com.ruoyi.clash.service.IProxyRuleService;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProxyRuleServiceImpl implements IProxyRuleService {

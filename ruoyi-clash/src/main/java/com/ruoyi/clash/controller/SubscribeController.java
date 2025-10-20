@@ -27,10 +27,11 @@ public class SubscribeController extends BaseController {
     @GetMapping(value = "", produces = "text/yaml; charset=UTF-8")
     public String get() {
         ClashConfig clashConfig = new ClashConfig();
+        // TODO 添加缓存处理，无需每次查询数据库
         clashConfig.setProxies(nodeService.exactQuery(null));
         clashConfig.setProxyGroups(groupService.exactQuery(null));
         clashConfig.setRules(ruleService.exactQuery(null));
-        Map<String, Object> yamlMap = clashConfig.toYamlMap();
+        Map<String, Object> yamlMap = clashConfig.toYamlMap(null);
         Yaml yaml = new Yaml();
         String output = yaml.dump(yamlMap);
         return output;

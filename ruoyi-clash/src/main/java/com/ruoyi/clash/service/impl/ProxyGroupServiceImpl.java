@@ -1,7 +1,7 @@
 package com.ruoyi.clash.service.impl;
 
-import com.ruoyi.clash.domain.node.ProxyGroup;
-import com.ruoyi.clash.domain.node.ProxyGroupNode;
+import com.ruoyi.clash.domain.ProxyGroup;
+import com.ruoyi.clash.domain.ProxyGroupNode;
 import com.ruoyi.clash.mapper.ProxyGroupMapper;
 import com.ruoyi.clash.mapper.ProxyGroupNodeMapper;
 import com.ruoyi.clash.service.IProxyGroupService;

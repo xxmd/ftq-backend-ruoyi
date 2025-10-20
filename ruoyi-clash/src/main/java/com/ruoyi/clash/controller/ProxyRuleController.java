@@ -1,6 +1,6 @@
 package com.ruoyi.clash.controller;
 
-import com.ruoyi.clash.domain.node.ProxyRule;
+import com.ruoyi.clash.domain.ProxyRule;
 import com.ruoyi.clash.service.IProxyRuleService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
